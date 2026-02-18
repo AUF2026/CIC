@@ -1,1 +1,88 @@
-IN AGGIORNAMENTO, PRESTO ON LINE!
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>CIC | INITIALIZING...</title>
+    <style>
+        :root { --neon: #00f2ff; --bg: #000000; --font-mono: 'JetBrains Mono', monospace; }
+        body { 
+            background: var(--bg); 
+            color: #fff; 
+            font-family: var(--font-mono), sans-serif; 
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            margin: 0; 
+            overflow: hidden;
+        }
+        /* Animazione background */
+        body::before {
+            content: ""; position: absolute; width: 200%; height: 200%;
+            background: radial-gradient(circle, #0a0a0a 1px, transparent 1px);
+            background-size: 40px 40px; z-index: -1; animation: move 60s linear infinite;
+        }
+        @keyframes move { from { transform: translateY(0); } to { transform: translateY(-50%); } }
+
+        .container { text-align: center; padding: 20px; }
+        
+        .logo-glow {
+            font-size: 4rem; font-weight: 900; letter-spacing: 15px;
+            color: var(--neon); text-shadow: 0 0 20px rgba(0, 242, 255, 0.6);
+            margin-bottom: 10px; animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        .tagline { color: #555; font-size: 0.8rem; letter-spacing: 5px; text-transform: uppercase; margin-bottom: 50px; }
+        
+        .loading-bar {
+            width: 250px; height: 2px; background: #111; margin: 0 auto; position: relative; overflow: hidden;
+        }
+        .loading-bar::after {
+            content: ""; position: absolute; left: -100%; width: 100%; height: 100%;
+            background: var(--neon); animation: loading 2s infinite;
+        }
+        @keyframes loading { 0% { left: -100%; } 100% { left: 100%; } }
+
+        .status { margin-top: 20px; font-size: 0.7rem; color: var(--neon); opacity: 0.8; }
+        
+        .countdown { font-size: 1.5rem; margin-top: 30px; font-weight: bold; color: #ccc; }
+
+        footer { position: absolute; bottom: 30px; font-size: 0.6rem; color: #333; letter-spacing: 2px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="logo-glow">CIC</div>
+        <div class="tagline">Cybernetic Interface Control</div>
+        
+        <div class="loading-bar"></div>
+        
+        <div class="status">> Sincronizzazione Fretboard in corso...</div>
+        <div class="countdown" id="timer">T-MINUS 24:00:00</div>
+    </div>
+
+    <footer>
+        ALAIN FAURE / AUF2026 / DETERMINISTIC SYSTEM
+    </footer>
+
+    <script>
+        // Semplice effetto per rendere il timer dinamico
+        function updateTimer() {
+            const now = new Date();
+            const hours = 23 - now.getHours();
+            const minutes = 59 - now.getMinutes();
+            const seconds = 59 - now.getSeconds();
+            document.getElementById('timer').innerText = 
+                `T-MINUS ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        setInterval(updateTimer, 1000);
+        updateTimer();
+    </script>
+</body>
+</html>
