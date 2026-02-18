@@ -1,18 +1,20 @@
-# 🎛️ CIC | CYBERNETIC INTERFACE CONTROL
-> **Status: Operational** | **Resonance: Deterministic**
+# 🎸 CIC | INTELLIFRET di Alain Faure.
+> **Status: Operational** | **Fretboard Intelligente: For Beginners & PRO!**
 
-Benvenuto nel terminale **CIC**. Questa non è una semplice pagina web, è un modulo autonomo progettato per il controllo di segnali audio e la gestione dell'entropia sonora. 
+**CIC** è un'interfaccia interattiva progettata per la mappatura e la visualizzazione delle note, accordi, scale, sul manico (Fretboard). Uno strumento essenziale per musicisti che cercano una risoluzione O(1) nello studio delle scale e delle armonie.
+### 🎸La app è in costante sviluppo, as it is!
 
-## ⚡ Caratteristiche Core
-- **Hardware Acceleration:** Interfaccia fluida ottimizzata per GPU.
-- **Pure Signal:** Motore audio basato su Web Audio API nativa.
-- **Zero Latency:** Architettura a file unico per un'esecuzione immediata.
+### ⚡ LIVE INTERFACE UPLINK
+### 👉 [ACCEDI A CIC FRETBOARD](https://WAF2026.github.io/CIC/)
+*(Ottimizzato per dispositivi mobile e desktop tramite Brave)*
 
-## 🚀 Deployment Rapido
-1. Carica l'asset sul tuo repository GitHub.
-2. Attiva **GitHub Pages** (Settings > Pages > Branch: Main).
-3. Apri l'URL e inizializza il sistema con un click.
+### 🚀 Caratteristiche dello Strumento
+- **Visual Mapping:** Visualizzazione istantanea di intervalli e frequenze.
+- **Latency-Free:** Engine JavaScript nativo per una risposta immediata al tocco/click.
+- **Pure Web App:** Nessuna installazione richiesta, architettura Single-File.
 
-## 📡 Uplink & Support
+### 📡 Contatti & Feedback
 Sviluppato da **Alain Faure** | [AUF2026@protonmail.com](mailto:AUF2026@protonmail.com)
-*“Collassiamo l'entropia, una nota alla volta.”*
+*“L'armonia è un sistema deterministico.”*
+---
+**Q.E.D.**
