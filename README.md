@@ -5,7 +5,7 @@
 ### 🎸La app è in costante sviluppo, as it is!
 
 ### ⚡ LIVE INTERFACE UPLINK
-### 👉 [ACCEDI A CIC FRETBOARD](https://AUF2026.github.io/CIC/index.html)
+### 👉 [ACCEDI A CIC FRETBOARD](https://auf2026.github.io/CIC/index.html)
 *(Ottimizzato per dispositivi mobile e desktop tramite Brave)*
 
 ### 🚀 Caratteristiche dello Strumento
