@@ -15,6 +15,5 @@
 
 ### 📡 Contatti & Feedback
 Sviluppato da **Alain Faure** | [AUF2026@protonmail.com](mailto:AUF2026@protonmail.com)
-*“L'armonia è un sistema deterministico.”*
 ---
 **Q.E.D.**
