@@ -1,83 +1,1104 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>CIC | INITIALIZING...</title>
-    <style>
-        :root { --neon: #00f2ff; --bg: #000000; --font-mono: 'JetBrains Mono', monospace; }
-        body { 
-            background: var(--bg); 
-            color: #fff; 
-            font-family: var(--font-mono), sans-serif; 
-            height: 100vh; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center; 
-            align-items: center; 
-            margin: 0; 
-            overflow: hidden;
-        }
-        /* Animazione background */
-        body::before {
-            content: ""; position: absolute; width: 200%; height: 200%;
-            background: radial-gradient(circle, #0a0a0a 1px, transparent 1px);
-            background-size: 40px 40px; z-index: -1; animation: move 60s linear infinite;
-        }
-        @keyframes move { from { transform: translateY(0); } to { transform: translateY(-50%); } }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>INTELLIFRET CIC – Fretboard per musicisti.</title>
 
-        .container { text-align: center; padding: 20px; }
-        
-        .logo-glow {
-            font-size: 4rem; font-weight: 900; letter-spacing: 15px;
-            color: var(--neon); text-shadow: 0 0 20px rgba(0, 242, 255, 0.6);
-            margin-bottom: 10px; animation: pulse 2s infinite;
-        }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+<style>
+/* =====================================================
+   VARIABILI GLOBALI
+===================================================== */
+:root{
+ --bg:#121212;
+ --surface:#1e1e1e;
+ --primary:#03dac6;
+ --text:#e0e0e0;
+ --root:#ff4b4b;
+ --third:#ffd54f;
+ --fifth:#4fc3f7;
+ --seventh:#ba68c8;
+}
 
-        .tagline { color: #555; font-size: 0.8rem; letter-spacing: 5px; text-transform: uppercase; margin-bottom: 50px; }
-        
-        .loading-bar {
-            width: 250px; height: 2px; background: #111; margin: 0 auto; position: relative; overflow: hidden;
-        }
-        .loading-bar::after {
-            content: ""; position: absolute; left: -100%; width: 100%; height: 100%;
-            background: var(--neon); animation: loading 2s infinite;
-        }
-        @keyframes loading { 0% { left: -100%; } 100% { left: 100%; } }
+/* =====================================================
+   BASE
+===================================================== */
+body{
+ margin:0;
+ font-family:Roboto,Segoe UI,Arial,sans-serif;
+ background:var(--bg);
+ color:var(--text);
+}
 
-        .status { margin-top: 20px; font-size: 0.7rem; color: var(--neon); opacity: 0.8; }
-        
-        .countdown { font-size: 1.5rem; margin-top: 30px; font-weight: bold; color: #ccc; }
+svg{display:block}
 
-        footer { position: absolute; bottom: 30px; font-size: 0.6rem; color: #fff; letter-spacing: 2px; }
-    </style>
+/* =====================================================
+   LAYOUT
+===================================================== */
+.page{display:flex;min-height:100vh}
+.side{flex:0 0 20%}
+.center{flex:0 0 60%;display:flex;justify-content:center}
+.center-inner{width:100%;max-width:1200px}
+
+.app{display:flex;flex-direction:column;height:100%}
+.toolbar{background:var(--surface);padding:12px;font-size:18px;font-weight:600;border-radius:auto;margin-top:14px}
+.content{flex:1;overflow:auto;padding:10px}
+
+/* =====================================================
+   CONTROLLI
+===================================================== */
+.controls{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:8px;
+ margin-bottom:14px;
+}
+
+button,select,input{
+ background:#2a2a2a;
+ color:var(--text);
+ border:none;
+ border-radius:8px;
+ padding:10px;
+ font-size:14px;
+ cursor:pointer;
+}
+
+button.active{
+ background:var(--primary);
+ color:#000;
+ box-shadow:0 0 0 2px rgba(3,218,198,.4);
+}
+
+/* =====================================================
+   LEGGENDA
+===================================================== */
+.legend{
+ display:flex;
+ gap:14px;
+ font-size:13px;
+ margin:6px 0 10px;
+ opacity:.9;
+}
+
+.legend .l{
+ width:18px;
+ height:18px;
+ border-radius:50%;
+ display:inline-flex;
+ align-items:center;
+ justify-content:center;
+ font-weight:bold;
+ color:#000;
+ margin-right:4px;
+}
+
+.legend .root{background:var(--root)}
+.legend .third{background:var(--third)}
+.legend .fifth{background:var(--fifth)}
+.legend .seventh{background:var(--seventh)}
+
+/* =====================================================
+   FRETBOARD ORIZZONTALE (MANICO GRANDE)
+   → usa classi .note, .note-label
+===================================================== */
+.fretboard{
+ background:#1a1a1a;
+ border-radius:14px;
+ padding:8px;
+ margin-top:10px;
+ overflow-x:auto;
+}
+
+/* pallini */
+.note{
+ cursor:pointer;
+ transition:fill .12s;
+}
+
+.note.root{fill:var(--root)}
+.note.third{fill:var(--third)}
+.note.fifth{fill:var(--fifth)}
+.note.seventh{fill:var(--seventh)}
+.note.other{fill:#777}
+
+/* lettera dentro al pallino */
+.note-label{
+ fill:#000;
+ font-size:10px;
+ font-weight:bold;
+ text-anchor:middle;
+ dominant-baseline:middle;
+ pointer-events:none;
+}
+
+/* highlight quando suona */
+.note.active{
+ stroke:#fff;
+ stroke-width:3;
+ filter:drop-shadow(0 0 6px rgba(255,255,255,.8));
+}
+
+/* =====================================================
+   DIAGRAMMI VERTICALI (ACCORDI)
+   → usa classi .dot, .dot.root, .open, .mute
+===================================================== */
+
+/* pallini standard */
+.dot{
+ fill:#e0e0e0;
+ filter:drop-shadow(0 1px 2px rgba(0,0,0,.4));
+}
+
+/* 🔴 ROOT */
+.dot.root{
+ fill:var(--root);
+ filter:
+  drop-shadow(0 0 4px rgba(255,75,75,.9))
+  drop-shadow(0 0 10px rgba(255,75,75,.6));
+}
+
+/* cerchio corda a vuoto */
+.open{
+ fill:none;
+ stroke:#ccc;
+ stroke-width:1.5;
+}
+
+/* X corda muta */
+.mute{
+ fill:#ccc;
+ font-size:12px;
+ font-weight:bold;
+}
+
+/* =====================================================
+   AREA DIAGRAMMI VERTICALI
+===================================================== */
+
+.diagram-area{
+ display:flex;
+ gap:16px;
+ margin:10px 0 16px;
+ flex-wrap:wrap;            /* va a capo su schermi piccoli */
+}
+
+/* singolo diagramma */
+.diagram{
+ background:#181818;
+ border-radius:12px;
+ padding:8px;
+ box-shadow:0 0 0 1px rgba(255,255,255,0.06) inset;
+}
+
+/* centra l'SVG dentro il box */
+.diagram svg{
+ display:block;
+ margin:auto;
+}
+
+/* =====================================================
+   VISIBILITÀ + ANIMAZIONE DIAGRAMMI
+===================================================== */
+
+.diagram-area{
+ opacity:1;
+ transition:opacity .25s ease;
+}
+
+/* stato nascosto */
+.diagram-area.hidden{
+ opacity:0;
+ pointer-events:none;
+}
+
+/* =====================================================
+   TAB TESTUALE
+===================================================== */
+pre{
+ background:#181818;
+ color:#e0e0e0;
+ padding:12px;
+ border-radius:8px;
+ font-size:13px;
+ line-height:1.5;
+ font-family:"Courier New",monospace;
+ margin-top:8px;
+}
+
+/* =====================================================
+   TITOLI DIAGRAMMI
+===================================================== */
+
+.diagram-title{
+ text-align:center;
+ font-size:13px;
+ font-weight:600;
+ margin-bottom:6px;
+ opacity:0.95;
+}
+
+.diagram-subtitle{
+ text-align:center;
+ font-size:12px;
+ margin-top:6px;
+ opacity:0.7;
+}
+
+</style>
+
 </head>
+
 <body>
-<div class="container">
-        <div class="logo-glow">CIC</div>
-        <div class="tagline">INTELLIFRET - FRETBOARD FOR MUSICIAN</div>
-        
-        <div class="loading-bar"></div>
-        
-        <div class="status">&gt; Sincronizzazione Fretboard in corso...</div>
-        <div class="countdown" id="timer">T-MINUS 11:55:23</div>
-    </div>
-    <footer style="color: #ffaa00>ALAIN FAURE AUF2026© <a href="mailto:AUF2026@protonmail.com">AUF2026@protonmail.com</a> | INTELLIFRET CIC | Fretboard per musicisti.</footer>
-    <script>
-        // Semplice effetto per rendere il timer dinamico
-        function updateTimer() {
-            const now = new Date();
-            const hours = 23 - now.getHours();
-            const minutes = 59 - now.getMinutes();
-            const seconds = 59 - now.getSeconds();
-            document.getElementById('timer').innerText = 
-                `T-MINUS ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        }
-        setInterval(updateTimer, 1000);
-        updateTimer();
-    </script>
+<div class="page">
+ <div class="side"></div>
+ <div class="center">
+  <div class="center-inner">
+
+<div class="app">
+
+<div class="toolbar">
+ <div style="display:flex;align-items:center;justify-content:space-between;">
+  <span>IntelliFret di Alain Faure</span>
+  <span class="actions">
+   <button id="play">PLAY</button>
+   <button id="arp">ARPEGGIO</button>
+   <button id="strum">STRUM</button>
+  </span>
+
+ </div>
+</div>
+
+<div class="content">
+
+<div class="controls">
+<select id="root"></select>
+<select id="quality"></select>
+<button id="hand">DESTRORSI</button>
+
+<button id="m-note">NOTE</button>
+<button id="m-scale">SCALE</button>
+<button id="m-scaleplus">SCALE+</button>
+<button id="m-chord" class="active">ACCORDI</button>
+
+<button id="metro">METRONOMO</button>
+<input id="bpm" type="number" min="40" max="400" value="120">
+
+<select id="beats">
+ <option value="2">2/4</option>
+ <option value="3">3/4</option>
+ <option value="4" selected>4/4</option>
+ <option value="5">5/4</option>
+</select>
+
+</div>
+
+<div class="fretboard">
+<div class="legend">
+ <span><span class="l root">R</span>Root</span>
+ <span><span class="l third">3</span>Terza</span>
+ <span><span class="l fifth">5</span>Quinta</span>
+ <span><span class="l seventh">7</span>Settima</span>
+</div>
+
+<svg id="fb" width="960" height="300" viewBox="0 0 960 300"></svg>
+<pre id="tab"></pre>
+</div>
+
+
+
+<div class="diagram-area">
+<div class="diagram">
+<div class="diagram-title"></div>
+  <svg width="140" height="200" viewBox="0 0 140 200">
+  <!-- capotasto -->
+  <rect x="20" y="25" width="100" height="6" fill="#5d4647"/>
+
+  <!-- corde -->
+  <g stroke="#ccc" stroke-width="3"><line x1="20" y1="30" x2="20" y2="180"/></g>
+  <g stroke="#ccc" stroke-width="2.5"><line x1="40" y1="30" x2="40" y2="180"/></g>
+  <g stroke="#ccc" stroke-width="2"><line x1="60" y1="30" x2="60" y2="180"/></g>
+  <g stroke="#ccc" stroke-width="2"><line x1="80" y1="30" x2="80" y2="180"/></g>
+  <g stroke="#ccc" stroke-width="1.5"><line x1="100" y1="30" x2="100" y2="180"/></g>
+  <g stroke="#ccc" stroke-width="1"><line x1="120" y1="30" x2="120" y2="180"/></g>
+
+  <!-- tasti -->
+  <g stroke="#666" stroke-width="1">
+   <line x1="20" y1="60" x2="120" y2="60"/>
+   <line x1="20" y1="90" x2="120" y2="90"/>
+   <line x1="20" y1="120" x2="120" y2="120"/>
+   <line x1="20" y1="150" x2="120" y2="150"/>
+  </g>
+ </svg>
+ <div class="diagram-subtitle"></div>
+ </div>
+ <div class="diagram">
+ <div class="diagram-title"></div>
+  <svg width="140" height="200" viewBox="0 0 140 200">
+  <!-- capotasto -->
+  <rect x="20" y="25" width="100" height="6" fill="#5d4647"/>
+
+  <!-- corde -->
+  <g stroke="#ccc" stroke-width="3"><line x1="20" y1="30" x2="20" y2="180"/></g>
+  <g stroke="#ccc" stroke-width="2.5"><line x1="40" y1="30" x2="40" y2="180"/></g>
+  <g stroke="#ccc" stroke-width="2"><line x1="60" y1="30" x2="60" y2="180"/></g>
+  <g stroke="#ccc" stroke-width="2"><line x1="80" y1="30" x2="80" y2="180"/></g>
+  <g stroke="#ccc" stroke-width="1.5"><line x1="100" y1="30" x2="100" y2="180"/></g>
+  <g stroke="#ccc" stroke-width="1"><line x1="120" y1="30" x2="120" y2="180"/></g>
+
+  <!-- tasti -->
+  <g stroke="#666" stroke-width="1">
+   <line x1="20" y1="60" x2="120" y2="60"/>
+   <line x1="20" y1="90" x2="120" y2="90"/>
+   <line x1="20" y1="120" x2="120" y2="120"/>
+   <line x1="20" y1="150" x2="120" y2="150"/>
+  </g>
+ </svg>
+ <div class="diagram-subtitle"></div>
+ </div>
+ <div class="diagram">
+ <div class="diagram-title"></div>
+  <svg width="140" height="200" viewBox="0 0 140 200">
+  <!-- capotasto -->
+  <rect x="20" y="25" width="100" height="6" fill="#5d4647"/>
+
+  <!-- corde -->
+  <g stroke="#ccc" stroke-width="3"><line x1="20" y1="30" x2="20" y2="180"/></g>
+  <g stroke="#ccc" stroke-width="2.5"><line x1="40" y1="30" x2="40" y2="180"/></g>
+  <g stroke="#ccc" stroke-width="2"><line x1="60" y1="30" x2="60" y2="180"/></g>
+  <g stroke="#ccc" stroke-width="2"><line x1="80" y1="30" x2="80" y2="180"/></g>
+  <g stroke="#ccc" stroke-width="1.5"><line x1="100" y1="30" x2="100" y2="180"/></g>
+  <g stroke="#ccc" stroke-width="1"><line x1="120" y1="30" x2="120" y2="180"/></g>
+
+  <!-- tasti -->
+  <g stroke="#666" stroke-width="1">
+   <line x1="20" y1="60" x2="120" y2="60"/>
+   <line x1="20" y1="90" x2="120" y2="90"/>
+   <line x1="20" y1="120" x2="120" y2="120"/>
+   <line x1="20" y1="150" x2="120" y2="150"/>
+  </g>
+ </svg>
+ <div class="diagram-subtitle"></div>
+ </div>
+</div>
+
+</div>
+</div>
+
+  </div>
+ </div>
+ <div class="side"></div>
+</div>
+
+<script>
+
+/* =====================================================
+   AUDIO ENGINE
+===================================================== */
+
+let audio;
+
+function ctx(){
+ if(!audio) audio = new (window.AudioContext || window.webkitAudioContext)();
+ if(audio.state === "suspended") audio.resume();
+ return audio;
+}
+
+const ENVELOPES = {
+ play:  { a:0.02, d:1.4 },
+ arp:   { a:0.01, d:0.8 },
+ strum: { a:0.005, d:0.4 }
+};
+
+function playMidi(midi, string, mode, delay=0){
+ const a = ctx();
+ const o = a.createOscillator();
+ const g = a.createGain();
+
+ o.type = "triangle";
+ o.frequency.value = 440 * Math.pow(2,(midi-69)/12);
+
+ const velocity = 1 - string * 0.12;
+ const env = ENVELOPES[mode];
+ const t = a.currentTime + delay;
+
+ g.gain.setValueAtTime(0, t);
+ g.gain.linearRampToValueAtTime(0.6 * velocity, t + env.a);
+ g.gain.exponentialRampToValueAtTime(0.0001, t + env.d);
+
+ o.connect(g).connect(a.destination);
+ o.start(t);
+ o.stop(t + env.d + 0.05);
+
+ setTimeout(()=>highlight(midi), delay*1000);
+}
+
+/* =====================================================
+   MUSICAL DATA
+===================================================== */
+
+const NOTES = ["Do","Do#","Re","Re#","Mi","Fa","Fa#","Sol","Sol#","La","La#","Si"];
+const TUNING = [40,45,50,55,59,64];
+const STRING_NAMES = ["Mi","La","Re","Sol","Si","Mi"];
+
+const CHORDS = {
+ Maj:[0,4,7], Min:[0,3,7], Dim:[0,3,6], Aug:[0,4,8],
+ sus2:[0,2,7], sus4:[0,5,7],
+ "7":[0,4,7,10], Maj7:[0,4,7,11], Min7:[0,3,7,10]
+};
+
+const SCALES_BASIC = {
+ Maggiore:[0,2,4,5,7,9,11],
+ Minore:[0,2,3,5,7,8,10],
+ PentatonicaMag:[0,2,4,7,9],
+ PentatonicaMin:[0,3,5,7,10],
+ Blues:[0,3,5,6,7,10]
+};
+
+const SCALES_ADVANCED = {
+
+ /* MODI */
+ Ionica:        [0,2,4,5,7,9,11],
+ Dorica:        [0,2,3,5,7,9,10],
+ Frigia:        [0,1,3,5,7,8,10],
+ Lidia:         [0,2,4,6,7,9,11],
+ Misolidia:     [0,2,4,5,7,9,10],
+ Eolia:         [0,2,3,5,7,8,10],
+ Locria:        [0,1,3,5,6,8,10],
+
+ /* MINORI */
+ MinoreArmonica:[0,2,3,5,7,8,11],
+ MinoreMelodica:[0,2,3,5,7,9,11],
+
+ /* DERIVATE MELODIC MINOR */
+ DoricaB2:      [0,1,3,5,7,9,10],
+ LidiaAumentata:[0,2,4,6,8,9,11],
+ LidiaDominante:[0,2,4,6,7,9,10],
+ MisolidiaB6:   [0,2,4,5,7,8,10],
+ Locria9:       [0,2,3,5,6,8,10],
+ Superlocria:   [0,1,3,4,6,8,10],
+
+ /* DIMINISHED */
+ DiminuitaHW:   [0,1,3,4,6,7,9,10],
+ DiminuitaWH:   [0,2,3,5,6,8,9,11],
+
+ /* TONE */
+ Esatonale:     [0,2,4,6,8,10],
+
+ /* BLUES / FUSION */
+ BluesMaggiore: [0,2,3,4,7,9],
+ BluesMinore:   [0,3,5,6,7,10],
+
+ /* WORLD */
+ FrigiaMaggiore:[0,1,4,5,7,8,10],  // spagnola
+ Giapponese:    [0,1,5,7,8],
+ Egizia:        [0,2,5,7,10],
+
+ /* JAZZ / BEBOP */
+ BebopMaggiore: [0,2,4,5,7,8,9,11],
+ BebopDominante:[0,2,4,5,7,9,10,11]
+};
+
+/* =====================================================
+   APPLICATION STATE
+===================================================== */
+
+const state = {
+ mode:"chord",
+ root:0,
+ quality:"Maj",
+ handedness:"right",
+ noteEvents:[]
+};
+
+/* =====================================================
+   SHAPES (diagrammi verticali – accordi)
+   Ogni quality ha 1–3 forme suonabili
+===================================================== */
+
+const SHAPES = [
+
+ /* ================= MAJOR ================= */
+ {
+  name:"open",
+  quality:"Maj",
+  fretStart:0,
+  frets:[-1,3,2,0,1,0]
+ },
+ {
+  name:"barreA",
+  quality:"Maj",
+  fretStart:3,
+  frets:[-1,3,5,5,5,3]
+ },
+ {
+  name:"triad",
+  quality:"Maj",
+  fretStart:5,
+  frets:[-1,-1,5,5,5,8]
+ },
+
+ /* ================= MINOR ================= */
+ {
+  name:"open",
+  quality:"Min",
+  fretStart:0,
+  frets:[-1,3,1,0,1,3]
+ },
+ {
+  name:"barreA",
+  quality:"Min",
+  fretStart:3,
+  frets:[-1,3,5,5,4,3]
+ },
+ {
+  name:"triad",
+  quality:"Min",
+  fretStart:5,
+  frets:[-1,-1,5,5,4,8]
+ },
+
+ /* ================= DIM ================= */
+ {
+  name:"dim",
+  quality:"Dim",
+  fretStart:2,
+  frets:[-1,2,3,1,3,1]
+ },
+
+ /* ================= AUG ================= */
+ {
+  name:"aug",
+  quality:"Aug",
+  fretStart:3,
+  frets:[-1,3,2,1,1,0]
+ },
+
+ /* ================= SUS2 ================= */
+ {
+  name:"sus2",
+  quality:"sus2",
+  fretStart:0,
+  frets:[-1,3,0,0,1,3]
+ },
+ {
+  name:"barreA",
+  quality:"sus2",
+  fretStart:3,
+  frets:[-1,3,5,5,3,3]
+ },
+
+ /* ================= SUS4 ================= */
+ {
+  name:"sus4",
+  quality:"sus4",
+  fretStart:0,
+  frets:[-1,3,3,0,1,3]
+ },
+ {
+  name:"barreA",
+  quality:"sus4",
+  fretStart:3,
+  frets:[-1,3,5,5,6,3]
+ },
+
+ /* ================= DOMINANT 7 ================= */
+ {
+  name:"open",
+  quality:"7",
+  fretStart:0,
+  frets:[-1,3,2,3,1,0]
+ },
+ {
+  name:"barreA",
+  quality:"7",
+  fretStart:3,
+  frets:[-1,3,5,3,5,3]
+ },
+
+ /* ================= MAJOR 7 ================= */
+ {
+  name:"open",
+  quality:"Maj7",
+  fretStart:0,
+  frets:[-1,3,2,0,0,0]
+ },
+ {
+  name:"barreA",
+  quality:"Maj7",
+  fretStart:3,
+  frets:[-1,3,5,4,5,3]
+ },
+
+ /* ================= MINOR 7 ================= */
+ {
+  name:"open",
+  quality:"Min7",
+  fretStart:0,
+  frets:[-1,3,1,3,1,3]
+ },
+ {
+  name:"barreA",
+  quality:"Min7",
+  fretStart:3,
+  frets:[-1,3,5,3,4,3]
+ }
+
+];
+
+
+/* =====================================================
+   TRASPOSIZIONE SHAPE
+===================================================== */
+
+function transposeShape(shape, root){
+ return {
+  name: shape.name,
+  quality: shape.quality,
+  fretStart: shape.fretStart + root,
+  frets: shape.frets.map(f =>
+   f < 0 ? -1 :
+   f === 0 ? 0 :
+   f + root
+  )
+ };
+}
+
+/* =====================================================
+   OPEN CHORDS NATURALI (NON TRASPONIBILI)
+===================================================== */
+
+const OPEN_SHAPES = {
+ "Do":  { quality:"Maj", frets:[-1,3,2,0,1,0], fretStart:0 },
+ "Re":  { quality:"Maj", frets:[-1,-1,0,2,3,2], fretStart:0 },
+ "Mi":  { quality:"Maj", frets:[0,2,2,1,0,0], fretStart:0 },
+ "Fa":  null,
+ "Sol": { quality:"Maj", frets:[3,2,0,0,0,3], fretStart:0 },
+ "La":  { quality:"Maj", frets:[-1,0,2,2,2,0], fretStart:0 },
+ "Si":  null
+};
+
+/* =====================================================
+   VOICINGS DINAMICI (TAB VERTICALE)
+===================================================== */
+
+function getDynamicVoicings(){
+ const voicings = [];
+ const rootName = NOTES[state.root];
+
+ // 1️⃣ forma aperta naturale (se esiste)
+ if(state.quality === "Maj" && OPEN_SHAPES[rootName]){
+  voicings.push({
+   name: "open",
+   quality: "Maj",
+   frets: OPEN_SHAPES[rootName].frets,
+   fretStart: 0
+  });
+ }
+
+ // 2️⃣ altre forme (barrè, triadi) → trasposte
+ SHAPES
+  .filter(s => s.quality === state.quality && s.name !== "open")
+  .forEach(s=>{
+   voicings.push(transposeShape(s, state.root));
+  });
+
+ return voicings;
+}
+
+/* =====================================================
+   UI
+===================================================== */
+
+const rootSel=document.getElementById("root");
+const qualSel=document.getElementById("quality");
+const handBtn=document.getElementById("hand");
+
+NOTES.forEach((n,i)=>rootSel.add(new Option(n,i)));
+
+function updateQuality(){
+ qualSel.innerHTML="";
+ let src=CHORDS;
+ if(state.mode==="scale") src=SCALES_BASIC;
+ if(state.mode==="scaleplus") src=SCALES_ADVANCED;
+ Object.keys(src).forEach(k=>qualSel.add(new Option(k,k)));
+ state.quality=qualSel.value;
+}
+
+rootSel.onchange=()=>{state.root=+rootSel.value;update();}
+qualSel.onchange=()=>{state.quality=qualSel.value;update();}
+
+handBtn.onclick=()=>{
+ state.handedness=state.handedness==="right"?"left":"right";
+ handBtn.textContent=state.handedness==="right"?"DESTRORSI":"MANCINI";
+ update();
+};
+
+function setMode(m){
+ state.mode = m;
+
+ document.querySelectorAll("[id^=m-]")
+  .forEach(b => b.classList.remove("active"));
+ document.getElementById("m-"+m).classList.add("active");
+
+ // 👇 QUI LA FINEZZA
+ const diagrams = document.querySelector(".diagram-area");
+ if(diagrams){
+  diagrams.classList.toggle("hidden", m !== "chord");
+
+ }
+
+ updateQuality();
+ update();
+}
+
+
+["note","scale","scaleplus","chord"].forEach(m=>{
+ document.getElementById("m-"+m).onclick=()=>setMode(m);
+});
+
+/* =====================================================
+   NOTE GENERATION
+===================================================== */
+
+function computeNoteEvents(){
+ state.noteEvents=[];
+ const allowed=
+  state.mode==="note"?[0]:
+  state.mode==="scale"?SCALES_BASIC[state.quality]:
+  state.mode==="scaleplus"?SCALES_ADVANCED[state.quality]:
+  CHORDS[state.quality];
+
+ for(let s=0;s<6;s++){
+  for(let f=0;f<=12;f++){
+   const midi=TUNING[s]+f;
+   const rel=(midi-state.root+120)%12;
+   if(!allowed.includes(rel)) continue;
+
+   let role="other";
+   if(rel===0) role="root";
+   else if(rel===3||rel===4) role="third";
+   else if(rel===7) role="fifth";
+   else if(rel===10||rel===11) role="seventh";
+
+   state.noteEvents.push({
+    string:s,
+    fret:f,
+    midi,
+    name:NOTES[midi%12],
+    role
+   });
+  }
+ }
+}
+
+function getChordNotes(){
+ const perString={};
+ state.noteEvents.forEach(n=>{
+  if(!perString[n.string] || n.fret<perString[n.string].fret)
+   perString[n.string]=n;
+ });
+ return Object.values(perString);
+}
+
+/* =====================================================
+   FRETBOARD
+===================================================== */
+
+const FB={x0:60,y0:30,width:840,height:220,frets:12,stringGap:34,fretGap:70};
+const fretX=f=>state.handedness==="right"?FB.x0+f*FB.fretGap:FB.x0+(FB.frets-f)*FB.fretGap;
+const stringY=s=>FB.y0+(5-s)*FB.stringGap;
+
+function drawFretboard(){
+ const svg = document.getElementById("fb");
+ svg.innerHTML = `<rect width="100%" height="100%" rx="14" fill="#2b1a10"/>`;
+
+ // tasti
+ for(let f=0; f<=FB.frets; f++){
+  svg.innerHTML += `
+   <line x1="${fretX(f)}" y1="${FB.y0}"
+         x2="${fretX(f)}" y2="${FB.y0+FB.height}"
+         stroke="#888"/>`;
+ }
+
+ // corde + nomi
+ for(let s=0; s<6; s++){
+  svg.innerHTML += `
+   <line x1="${FB.x0}" y1="${stringY(s)}"
+         x2="${FB.x0+FB.width}" y2="${stringY(s)}"
+         stroke="#ccc"/>`;
+
+  svg.innerHTML += `
+   <text x="${FB.x0-10}" y="${stringY(s)+4}"
+         fill="#eee" text-anchor="end">
+    ${STRING_NAMES[s]}
+   </text>`;
+ }
+
+ // NOTE (clickabili)
+ state.noteEvents.forEach(n=>{
+  const x = fretX(n.fret) + FB.fretGap/2;
+  const y = stringY(n.string);
+
+  const g = document.createElementNS("http://www.w3.org/2000/svg","g");
+
+  const c = document.createElementNS("http://www.w3.org/2000/svg","circle");
+  c.setAttribute("class", `note ${n.role}`);
+  c.setAttribute("cx", x);
+  c.setAttribute("cy", y);
+  c.setAttribute("r", 12);
+  c.dataset.midi = n.midi;
+  c.dataset.string = n.string;
+
+  // 🔊 CLICK = SUONO
+  c.onclick = () => {
+   playMidi(n.midi, n.string, "play");
+  };
+
+  const t = document.createElementNS("http://www.w3.org/2000/svg","text");
+  t.setAttribute("class","note-label");
+  t.setAttribute("x", x);
+  t.setAttribute("y", y);
+  t.textContent = n.name;
+
+  g.appendChild(c);
+  g.appendChild(t);
+  svg.appendChild(g);
+ });
+}
+
+/* =====================================================
+   TAB
+===================================================== */
+
+function buildTab(){
+ const rows=Array(6).fill(0).map(()=>Array(13).fill("----"));
+ state.noteEvents.forEach(n=>{
+  rows[n.string][n.fret]=(n.fret+"").padEnd(4,"-");
+ });
+ return STRING_NAMES.slice().reverse()
+  .map((s,i)=>s+"|"+rows[5-i].join("")+"|")
+  .join("\n");
+}
+
+/* =====================================================
+   DIAGRAMMI
+===================================================== */
+
+function drawDiagram(svg, voicing){
+ const X = [20,40,60,80,100,120];
+ const Y = [45,75,105,135];
+
+ svg.querySelectorAll(".dot,.mute,.open").forEach(e=>e.remove());
+
+ voicing.frets.forEach((f,s)=>{
+  const x = X[s];
+
+  // corda muta
+  if(f < 0){
+   const t = document.createElementNS("http://www.w3.org/2000/svg","text");
+   t.setAttribute("x", x);
+   t.setAttribute("y", 24);
+   t.setAttribute("text-anchor","middle");
+   t.textContent = "X";
+   t.classList.add("mute");
+   svg.appendChild(t);
+   return;
+  }
+
+  // corda a vuoto
+  if(f === 0){
+   const c = document.createElementNS("http://www.w3.org/2000/svg","circle");
+   c.setAttribute("cx", x);
+   c.setAttribute("cy", 24);
+   c.setAttribute("r", 5);
+   c.classList.add("open");
+   svg.appendChild(c);
+   return;
+  }
+
+  // posizione verticale
+  const i = f - voicing.fretStart - 1;
+  if(i < 0 || i > 3) return;
+
+  // 🔴 ROOT detection
+  const isRoot = (TUNING[s] + f) % 12 === state.root;
+
+
+  const d = document.createElementNS("http://www.w3.org/2000/svg","circle");
+  d.setAttribute("cx", x);
+  d.setAttribute("cy", Y[i]);
+  d.setAttribute("r", isRoot ? 9 : 7);
+  d.classList.add("dot");
+  if(isRoot) d.classList.add("root");
+
+  svg.appendChild(d);
+ });
+}
+
+function updateDiagrams(){
+ const v = getDynamicVoicings();
+
+ document.querySelectorAll(".diagram").forEach((box,i)=>{
+  const svg = box.querySelector("svg");
+  const title = box.querySelector(".diagram-title");
+  const subtitle = box.querySelector(".diagram-subtitle");
+
+  const shape = v[i];
+
+  if(shape){
+   drawDiagram(svg, shape);
+
+   title.textContent =
+    `${getChordLabel()} · ${getShapeLabel(shape)}`;
+
+   subtitle.textContent = getFretLabel(shape);
+  }else{
+   // diagramma vuoto
+   svg.querySelectorAll(".dot,.open,.mute").forEach(e=>e.remove());
+   title.textContent = "";
+   subtitle.textContent = "";
+  }
+ });
+}
+
+function getChordLabel(){
+ const note = NOTES[state.root];
+ const qual = state.quality;
+ return `${note} – ${qual}`;
+}
+
+function getShapeLabel(shape){
+ if(!shape) return "";
+ if(shape.name === "open") return "Aperti";
+ if(shape.name === "barreA") return "Barrè";
+ if(shape.name === "triad") return "Triadi";
+ return shape.name;
+}
+
+function getFretLabel(shape){
+ if(!shape) return "";
+ if(shape.fretStart <= 0) return "";
+ return `${shape.fretStart}° tasto`;
+}
+
+/* =====================================================
+   HIGHLIGHT
+===================================================== */
+
+function highlight(midi){
+ document.querySelectorAll(`.note[data-midi="${midi}"]`)
+  .forEach(n=>{
+   n.classList.add("active");
+   setTimeout(()=>n.classList.remove("active"),120);
+  });
+}
+
+/* ================= METRONOMO ================= */
+
+let metroTimer = null;
+let metroOn = false;
+let beatCount = 0;
+
+function metroTick(){
+ const a = ctx(); // <-- risveglia AudioContext
+ const o = a.createOscillator();
+ const g = a.createGain();
+
+ const beats = +document.getElementById("beats").value || 4;
+
+ // accento sul primo beat
+ o.type = "square";
+ o.frequency.value = (beatCount === 0) ? 1800 : 1000;
+ g.gain.value = (beatCount === 0) ? 0.2 : 0.12;
+
+ o.connect(g).connect(a.destination);
+ o.start();
+ o.stop(a.currentTime + 0.05);
+
+ beatCount = (beatCount + 1) % beats;
+}
+
+document.getElementById("beats").onchange = () => {
+ if(metroOn) startMetro();
+};
+
+function startMetro(){
+ stopMetro();
+ beatCount = 0;
+
+ const bpm = +document.getElementById("bpm").value;
+ metroTimer = setInterval(metroTick, 60000 / bpm);
+}
+
+function stopMetro(){
+ if(metroTimer) clearInterval(metroTimer);
+ metroTimer = null;
+}
+
+document.getElementById("metro").onclick = () => {
+ metroOn = !metroOn;
+ document.getElementById("metro").classList.toggle("active", metroOn);
+ metroOn ? startMetro() : stopMetro();
+};
+
+/* aggiorna tempo se cambi BPM */
+document.getElementById("bpm").oninput = () => {
+ if(metroOn) startMetro();
+};
+
+/* =====================================================
+   PLAYBACK
+===================================================== */
+
+function stepTime(){
+ const bpm = +document.getElementById("bpm").value || 120;
+ return 60 / bpm;
+}
+
+function playNotes(mode){
+
+ let notes = state.mode==="chord"
+  ? getChordNotes()
+  : state.noteEvents;
+
+ notes=[...notes].sort((a,b)=>a.midi-b.midi);
+
+ if(mode==="play")
+  notes.forEach(n=>playMidi(n.midi,n.string,"play"));
+
+ if(mode==="arp"){
+  const step=stepTime();
+  notes.forEach((n,i)=>playMidi(n.midi,n.string,"arp",i*step));
+ }
+
+ if(mode==="strum"){
+  const step=stepTime()/3;
+  notes.forEach((n,i)=>playMidi(n.midi,n.string,"strum",i*step));
+ }
+}
+
+document.getElementById("play").onclick = ()=>playNotes("play");
+document.getElementById("arp").onclick = ()=>playNotes("arp");
+document.getElementById("strum").onclick = ()=>playNotes("strum");
+
+/* =====================================================
+   GLOBAL UPDATE
+===================================================== */
+
+function update(){
+ computeNoteEvents();
+ drawFretboard();
+ document.getElementById("tab").textContent=buildTab();
+ updateDiagrams();
+}
+
+updateQuality();
+update();
+
+</script>
+
+<footer style="color: #ffaa00>ALAIN FAURE AUF2026© <a href="mailto:AUF2026@protonmail.com">AUF2026@protonmail.com</a> | INTELLIFRET CIC | Fretboard per musicisti.</footer>
+
 </body>
 </html>
