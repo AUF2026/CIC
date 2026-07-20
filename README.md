@@ -1,19 +1,54 @@
-# 🎸 CIC | INTELLIFRET di Alain Faure.
-> **Status: Operational** | **Fretboard Intelligente: For Beginners & PRO!**
+# 🎸 CIC | INTELLIFRET by Alain Faure
 
-**CIC** è un'interfaccia interattiva progettata per la mappatura e la visualizzazione delle note, accordi, scale, sul manico (Fretboard). Uno strumento essenziale per musicisti che cercano una risoluzione O(1) nello studio delle scale e delle armonie.
-### 🎸La app è in costante sviluppo, as it is!
+> **Status: Operational** | **Intelligent Fretboard for Beginners & PRO Musicians**
 
-### ⚡ LIVE INTERFACE UPLINK
-### 👉 [ACCEDI A CIC FRETBOARD](https://auf2026.github.io/CIC/index.html)
-*(Ottimizzato per dispositivi mobile e desktop tramite Brave)*
+**CIC (Chromatic Intelligent Controller)** è un'interfaccia interattiva progettata per esplorare il manico della chitarra (**fretboard**) attraverso la visualizzazione dinamica di note, intervalli, accordi e scale.
 
-### 🚀 Caratteristiche dello Strumento
-- **Visual Mapping:** Visualizzazione istantanea di intervalli e frequenze.
-- **Latency-Free:** Engine JavaScript nativo per una risposta immediata al tocco/click.
-- **Pure Web App:** Nessuna installazione richiesta, architettura Single-File.
+Uno strumento pensato per musicisti di ogni livello, che permette di comprendere immediatamente le relazioni armoniche senza dover consultare tabelle o diagrammi statici.
 
-### 📡 Contatti & Feedback
-Sviluppato da **Alain Faure** | [AUF2026@protonmail.com](mailto:AUF2026@protonmail.com)
+### 🎸 Sviluppo continuo
+
+La piattaforma è in costante evoluzione: nuove funzioni e ottimizzazioni vengono integrate progressivamente.
+
 ---
+
+## ⚡ LIVE INTERFACE UPLINK
+
+### 👉 [ACCEDI A CIC FRETBOARD](https://auf2026.github.io/CIC/index.html)
+
+*Ottimizzato per dispositivi mobile e desktop.*
+
+---
+
+## 🚀 Caratteristiche dello Strumento
+
+* **Visual Mapping**
+  Visualizzazione immediata di note, intervalli, scale e strutture armoniche sul manico.
+
+* **Instant Response Engine**
+  Motore JavaScript nativo per un'interazione rapida e diretta tramite touch o click.
+
+* **Pure Web App**
+  Nessuna installazione richiesta: accesso immediato tramite browser.
+
+* **Learning & Exploration Mode**
+  Uno spazio interattivo per studiare, verificare e sperimentare combinazioni musicali.
+
+---
+
+## 🎯 Obiettivo
+
+CIC nasce per trasformare il fretboard da una mappa da memorizzare a una struttura visiva da esplorare.
+
+La relazione tra note, intervalli e armonia diventa immediatamente consultabile attraverso un'interfaccia semplice e interattiva.
+
+---
+
+## 📡 Contatti & Feedback
+
+Sviluppato da **Alain Faure**
+📧 [AUF2026@protonmail.com](mailto:AUF2026@protonmail.com)
+
+---
+
 **Q.E.D.**
